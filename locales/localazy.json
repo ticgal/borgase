@@ -1,0 +1,11 @@
+{
+    "upload": {
+        "type": "pot",
+        "deprecate": "project",
+        "files": "borgbase.pot"
+    },
+    "download": {
+        "files": "${languageCode}_${regionCode}.po",
+        "includeSourceLang": true
+    }
+}
