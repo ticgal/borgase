@@ -45,12 +45,15 @@
    <tags>
       <en>
          <tag>Borgbase</tag>
+         <tag>Backup</tag>
       </en>
       <es>
          <tag>Borgbase</tag>
+         <tag>Copia de seguridad</tag>
       </es>
       <gl>
          <tag>Borgbase</tag>
+         <tag>Copia de seguridade</tag>
       </gl>
    </tags>
    <!--screenshots>
