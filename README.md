@@ -1,4 +1,5 @@
-# Borgbase GLPI Plugin
+# Borgbase for GLPI
+<img src="https://raw.githubusercontent.com/ticgal/borgbase/multimedia/borgbase.png" alt="ActualTime Logo" height="250px" width="250px" class="js-lazy-loaded">
 
 [Borgbase](https://www.borgbase.com/) integration for GLPI
 
