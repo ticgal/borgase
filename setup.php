@@ -2,7 +2,7 @@
 /*
  -------------------------------------------------------------------------
  Borgbase plugin for GLPI
- Copyright (C) 2021-2022 by the TICgal Team.
+ Copyright (C) 2022 by TICGAL
  https://www.tic.gal/
  -------------------------------------------------------------------------
  LICENSE
@@ -18,13 +18,13 @@
  You should have received a copy of the GNU General Public License
  along with Borgbase. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
- @package  Borgbase
- @author    the TICgal team
- @copyright Copyright (c) 2021-2022 TICgal team
+ @package   Borgbase
+ @author    TICGAL
+ @copyright Copyright (c) 2022 TICGAL
  @license   AGPL License 3.0 or (at your option) any later version
  http://www.gnu.org/licenses/agpl-3.0-standalone.html
  @link      https://www.tic.gal/
- @since     2021-2022
+ @since     2022
  ----------------------------------------------------------------------
  */
 
@@ -112,7 +112,7 @@ function plugin_version_borgbase()
     return [
         'name' => 'Borgbase',
         'version' => PLUGIN_BORGBASE_VERSION,
-        'author' => '<a href="https://tic.gal">TICgal</a>',
+        'author' => '<a href="https://tic.gal">TICGAL</a>',
         'homepage' => 'https://tic.gal',
         'license' => 'AGPLv3+',
         'requirements' => [
