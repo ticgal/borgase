@@ -1,18 +1,23 @@
-# Borgbase GLPI Plugin
+# Borgbase for GLPI
+<img src="https://raw.githubusercontent.com/ticgal/borgbase/multimedia/borgbase.png" alt="ActualTime Logo" height="250px" width="250px" class="js-lazy-loaded">
 
-Plugin with [Borgbase](https://www.borgbase.com/) integration for GLPI to link devices with their backups.
+[Borgbase](https://www.borgbase.com/) integration for GLPI
 
-[![License](https://img.shields.io/badge/License-GNU%20AGPLv3-blue.svg)](https://github.com/ticgal/taskdrop/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-GNU%20AGPLv3-blue.svg)](https://github.com/ticgal/borgbase/blob/master/LICENSE)
 [![Twitter](https://img.shields.io/badge/Twitter-TICgal-blue.svg)](https://twitter.com/ticgalcom)
-[![TICgal](https://img.shields.io/badge/Web-TICgal-blue.svg)](https://tic.gal/)
-[![Localazy](https://img.shields.io/badge/Translate-Localazy-cyan)](https://localazy.com/p/one-time-secret-glpi#translations)
+[![TICGAL](https://img.shields.io/badge/Web-TICgal-blue.svg)](https://tic.gal/)
+[![Localazy](https://img.shields.io/badge/Translate-Localazy-cyan)](https://localazy.com/p/borgbase#translations)
 
 ## Supported versions
 - GLPI 10.0.x
 
+# Prerequisites
+
+You need a borgbase account. Get a 10 GB free account for life to test it here: https://www.borgbase.com/ 
+
 # How to configure it
 
-With the first installation you have to go to GLPI configuration panel (Setup > General > Borgbase) and add the Borgbase API key.
+After plugin installation head to the GLPI configuration (Setup > General > Borgbase) and add the Borgbase API key. A read-only one is enough.
 
 Configure the permissions of the profiles that will manage the plugin:
 - UPDATE: The user will be able to update the repository data manually.
