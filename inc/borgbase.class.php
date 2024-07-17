@@ -391,10 +391,13 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      */
     public function formatRawRequest($raw): array
     {
+        $format = [];
         $array = json_decode($raw, true);
+        if (!$array) {
+            return $format;
+        }
 
         // API returns always {"data":{"x"}} we only want x content
-        $format = [];
         foreach ($array as $data) {
             foreach ($data as $request) {
                 $format = $request;

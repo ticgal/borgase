@@ -37,7 +37,7 @@ use Glpi\Application\View\TemplateRenderer;
 
 class PluginBorgbaseConfig extends CommonDBTM
 {
-    public $rightname = 'config';
+    public static $rightname = 'config';
 
     /**
      * getTabNameForItem

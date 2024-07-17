@@ -12,18 +12,19 @@
 # (at your option) any later version.
 # Borgbase plugin is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 # You should have received a copy of the GNU General Public License
-# along with Borgbase. If not, see <http://www.gnu.org/licenses/>.
+# along with Borgbase. If not, see
+<http: //www.gnu.org/licenses />.
 # --------------------------------------------------------------------------
-# @package  Borgbase
-# @author    the TICgal team
+# @package Borgbase
+# @author the TICgal team
 # @copyright Copyright (c) 2022-2024 TICgal team
-# @license   AGPL License 3.0 or (at your option) any later version
+# @license AGPL License 3.0 or (at your option) any later version
 # http://www.gnu.org/licenses/agpl-3.0-standalone.html
-# @link      https://www.tic.gal/
-# @since     2022
+# @link https://www.tic.gal/
+# @since 2022
 # ----------------------------------------------------------------------
 #}
 
@@ -33,13 +34,13 @@
 {% set no_header = no_header|default(not item.isNewItem() and not _get._in_modal|default(false)) %}
 {% set bg = '' %}
 {% if item.isDeleted() %}
-   {% set bg = 'asset-deleted' %}
+{% set bg = 'asset-deleted' %}
 {% endif %}
 
 <div class="asset {{ bg }}">
 
-   {{ include('components/form/header.html.twig', {'in_twig': true, 'no_header': true}) }}
-   {% set params  = params ?? [] %}
+    {{ include('components/form/header.html.twig', {'in_twig': true, 'no_header': true}) }}
+    {% set params = params ?? [] %}
 
     <div class="card-body d-flex flex-wrap">
         <div class="col-12 col-xxl-12 flex-column">
@@ -48,49 +49,46 @@
                     <div class="row flex-row">
 
                         {% if item.isField('server') %}
-                            {{ fields.textField(
-                                'server',
-                                item.fields['server'],
-                                labels['server'],
-                                options
-                            ) }}
+                        {{ fields.textField(
+                        'server',
+                        item.fields['server'],
+                        labels['server'],
+                        options
+                        ) }}
                         {% endif %}
 
                         {% if item.isField('apikey') %}
-                            {{ fields.passwordField(
-                                'apikey',
-                                item.fields['apikey'],
-                                labels['apikey'],
-                                options
-                            ) }}
+                        {{ fields.passwordField(
+                        'apikey',
+                        item.fields['apikey'],
+                        labels['apikey'],
+                        options
+                        ) }}
                         {% endif %}
 
                         {% if connection %}
-                            {{ fields.htmlField(
-                                'connection',
-                                msg,
-                                ''
-                            ) }}
-                            
-                            <div class="form-field row col-6 mb-2 pe-0 justify-content-end align-items-center">
-                                <button class="btn w-auto" 
-                                type="submit" 
-                                name="reload" 
-                                value="1">
-                                    <i class="fa-solid fa-rotate"></i>
-                                    <span>{{ _x('button', labels['reload']) }}</span>
-                                </button>
-                            </div>
+                        {{ fields.htmlField(
+                        'connection',
+                        msg,
+                        ''
+                        ) }}
+
+                        <div class="form-field row col-6 mb-2 pe-0 justify-content-end align-items-center">
+                            <button class="btn w-auto" type="submit" name="reload" value="1">
+                                <i class="fa-solid fa-rotate"></i>
+                                <span>{{ _x('button', labels['reload']) }}</span>
+                            </button>
+                        </div>
                         {% endif %}
 
                         {% if item.isField('match') %}
-                            {{
-                                fields.dropdownYesNo(
-                                  'match',
-                                  item.fields['match'],
-                                  labels['match'],
-                                  options
-                            ) }}
+                        {{
+                        fields.dropdownYesNo(
+                        'match',
+                        item.fields['match'],
+                        labels['match'],
+                        options
+                        ) }}
                         {% endif %}
 
                     </div> {# .row #}
