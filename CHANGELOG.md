@@ -1,5 +1,9 @@
 # Borgbase - GLPI Plugin CHANGELOG
 
+## 1.1.1
+### Bugfixes
+- Fix PHP Deprecated function (#23377)
+
 ## 1.0.0
 
 ## 0.7.1 - 2022-11-23
