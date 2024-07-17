@@ -1,50 +1,50 @@
 <?php
-/*
- -------------------------------------------------------------------------
- Borgbase plugin for GLPI
- Copyright (C) 2021-2022 by the TICgal Team.
- https://www.tic.gal/
- -------------------------------------------------------------------------
- LICENSE
- This file is part of the Borgbase plugin.
- Borgbase plugin is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
- Borgbase plugin is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
- You should have received a copy of the GNU General Public License
- along with Borgbase. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
- @package  Borgbase
- @author    the TICgal team
- @copyright Copyright (c) 2021-2022 TICgal team
- @license   AGPL License 3.0 or (at your option) any later version
- http://www.gnu.org/licenses/agpl-3.0-standalone.html
- @link      https://www.tic.gal/
- @since     2021-2022
- ----------------------------------------------------------------------
+
+/**
+ * -------------------------------------------------------------------------
+ * Borgbase plugin for GLPI
+ * Copyright (C) 2022-2024 by the TICgal Team.
+ * https://www.tic.gal/
+ * -------------------------------------------------------------------------
+ * LICENSE
+ * This file is part of the Borgbase plugin.
+ * Borgbase plugin is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ * Borgbase plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with Borgbase. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
+ * @package  Borgbase
+ * @author    the TICgal team
+ * @copyright Copyright (c) 2022-2024 TICgal team
+ * @license   AGPL License 3.0 or (at your option) any later version
+ * http://www.gnu.org/licenses/agpl-3.0-standalone.html
+ * @link      https://www.tic.gal/
+ * @since     2022
+ * ----------------------------------------------------------------------
  */
 
-use Glpi\Plugins;
+use Glpi\Plugin\Hooks;
 
 define('PLUGIN_BORGBASE_VERSION', '1.1.0');
 define("PLUGIN_BORGBASE_MIN_GLPI_VERSION", "10.0.0");
 define("PLUGIN_BORGBASE_MAX_GLPI_VERSION", "10.0.99");
 
 /**
- * Init hooks of the plugin.
- * REQUIRED
+ * plugin_init_borgbase
  *
  * @return void
  */
-function plugin_init_borgbase()
+function plugin_init_borgbase(): void
 {
     global $PLUGIN_HOOKS;
 
-    $PLUGIN_HOOKS['csrf_compliant']['borgbase'] = true;
+    $PLUGIN_HOOKS[Hooks::CSRF_COMPLIANT]['borgbase'] = true;
 
     $plugin = new Plugin();
     if ($plugin->isActivated('borgbase')) {
@@ -107,14 +107,14 @@ function plugin_init_borgbase()
  *
  * @return array
  */
-function plugin_version_borgbase()
+function plugin_version_borgbase(): array
 {
     return [
-        'name' => 'Borgbase',
-        'version' => PLUGIN_BORGBASE_VERSION,
-        'author' => '<a href="https://tic.gal">TICgal</a>',
-        'homepage' => 'https://tic.gal',
-        'license' => 'AGPLv3+',
+        'name'      => 'Borgbase',
+        'version'   => PLUGIN_BORGBASE_VERSION,
+        'author'    => '<a href="https://tic.gal">TICgal</a>',
+        'homepage'  => 'https://tic.gal',
+        'license'   => 'AGPLv3+',
         'requirements' => [
             'glpi' => [
                 'min' => PLUGIN_BORGBASE_MIN_GLPI_VERSION,
@@ -122,34 +122,4 @@ function plugin_version_borgbase()
             ],
         ],
     ];
-}
-
-/**
- * Check pre-requisites before install
- * OPTIONNAL, but recommanded
- *
- * @return boolean
- */
-function plugin_borgbase_check_prerequisites()
-{
-    return true;
-}
-
-/**
- * Check configuration process
- *
- * @param boolean $verbose Whether to display message on failure. Defaults to false
- *
- * @return boolean
- */
-function plugin_borgbase_check_config($verbose = false)
-{
-    if (true) { // Your configuration check
-        return true;
-    }
-
-    if ($verbose) {
-        echo __('Installed / not configured', 'borgbase');
-    }
-    return false;
 }
