@@ -36,11 +36,7 @@ class PluginBorgbaseConfig extends CommonDBTM
     public static $rightname = 'config';
 
     /**
-     * getTabNameForItem
-     *
-     * @param  CommonGLPI $item
-     * @param  mixed $withtemplate
-     * @return string
+     * {@inheritDoc}
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string
     {
@@ -53,12 +49,7 @@ class PluginBorgbaseConfig extends CommonDBTM
     }
 
     /**
-     * displayTabContentForItem
-     *
-     * @param  CommonGLPI $item
-     * @param  mixed $tabnum
-     * @param  mixed $withtemplate
-     * @return boolean
+     * {@inheritDoc}
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): bool
     {

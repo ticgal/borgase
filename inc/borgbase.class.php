@@ -41,11 +41,9 @@ class PluginBorgbaseBorgbase extends CommonDBTM
 
     public $dohistory = true;
 
+
     /**
-     * getTypeName
-     *
-     * @param  mixed $nb
-     * @return string
+     * {@inheritDoc}
      */
     public static function getTypeName($nb = 0): string
     {
@@ -53,9 +51,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     }
 
     /**
-     * getIndexName
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public static function getIndexName(): string
     {
@@ -72,15 +68,8 @@ class PluginBorgbaseBorgbase extends CommonDBTM
         return 'fa-solid fa-hard-drive';
     }
 
-
-    // Display Tab
-
     /**
-     * getTabNameForItem
-     *
-     * @param  CommonGLPI $item
-     * @param  mixed $withtemplate
-     * @return string
+     * {@inheritDoc}
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string
     {
@@ -92,12 +81,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     }
 
     /**
-     * displayTabContentForItem
-     *
-     * @param  CommonGLPI $item
-     * @param  mixed $tabnum
-     * @param  mixed $withtemplate
-     * @return boolean
+     * {@inheritDoc}
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): bool
     {
@@ -345,7 +329,9 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      */
     public function reloadRepo($repoId): bool
     {
+        /** @var \DBmysql $DB */
         global $DB;
+
         $repo = $this->getRepo($repoId);
 
         if ($repo) {
@@ -619,11 +605,12 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     /**
      * install
      *
-     * @param  mixed $migration
+     * @param  Migration $migration
      * @return boolean
      */
-    public static function install(Migration $migration): bool
+    public static function install(Migration $migration): void
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $default_charset = DBConnection::getDefaultCharset();
@@ -659,24 +646,22 @@ class PluginBorgbaseBorgbase extends CommonDBTM
                 COLLATE={$default_collation}";
             $DB->request($query) or die($DB->error());
         }
-
-        return true;
     }
 
     /**
      * uninstall
      *
-     * @param  mixed $migration
-     * @return boolean
+     * @param  Migration $migration
+     * @return void
      */
-    public static function uninstall(Migration $migration): bool
+    public static function uninstall(Migration $migration): void
     {
+        /** @var \DBmysql $DB */
         global $DB;
+
         $table = self::getTable();
         //$migration->displayMessage('Uninstalling ' . $table);
 
         //$DB->queryOrDie("DROP TABLE `$table`", $DB->error());
-
-        return true;
     }
 }

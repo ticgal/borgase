@@ -15,8 +15,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 # You should have received a copy of the GNU General Public License
-# along with Borgbase. If not, see
-<http: //www.gnu.org/licenses />.
+# along with Borgbase. If not, see <http: //www.gnu.org/licenses />.
 # --------------------------------------------------------------------------
 # @package Borgbase
 # @author the TICgal team
@@ -42,60 +41,54 @@
     {{ include('components/form/header.html.twig', {'in_twig': true, 'no_header': true}) }}
     {% set params = params ?? [] %}
 
-    <div class="card-body d-flex flex-wrap">
-        <div class="col-12 col-xxl-12 flex-column">
-            <div class="d-flex flex-row flex-wrap flex-xl-nowrap">
-                <div class="row flex-row align-items-start flex-grow-1">
-                    <div class="row flex-row">
+    <div class="row">
+        <div class="row ps-4">
 
-                        {% if item.isField('server') %}
-                        {{ fields.textField(
-                        'server',
-                        item.fields['server'],
-                        labels['server'],
-                        options
-                        ) }}
-                        {% endif %}
+            {% if item.isField('server') %}
+            {{ fields.textField(
+            'server',
+            item.fields['server'],
+            labels['server'],
+            options
+            ) }}
+            {% endif %}
 
-                        {% if item.isField('apikey') %}
-                        {{ fields.passwordField(
-                        'apikey',
-                        item.fields['apikey'],
-                        labels['apikey'],
-                        options
-                        ) }}
-                        {% endif %}
+            {% if item.isField('apikey') %}
+            {{ fields.passwordField(
+            'apikey',
+            item.fields['apikey'],
+            labels['apikey'],
+            options
+            ) }}
+            {% endif %}
 
-                        {% if connection %}
-                        {{ fields.htmlField(
-                        'connection',
-                        msg,
-                        ''
-                        ) }}
+            {% if connection %}
+            {{ fields.htmlField(
+            'connection',
+            msg,
+            ''
+            ) }}
 
-                        <div class="form-field row col-6 mb-2 pe-0 justify-content-end align-items-center">
-                            <button class="btn w-auto" type="submit" name="reload" value="1">
-                                <i class="fa-solid fa-rotate"></i>
-                                <span>{{ _x('button', labels['reload']) }}</span>
-                            </button>
-                        </div>
-                        {% endif %}
+            <div class="form-field row col-6 mb-2 pe-0 justify-content-end align-items-center">
+                <button class="btn w-auto" type="submit" name="reload" value="1">
+                    <i class="fa-solid fa-rotate"></i>
+                    <span>{{ _x('button', labels['reload']) }}</span>
+                </button>
+            </div>
+            {% endif %}
 
-                        {% if item.isField('match') %}
-                        {{
-                        fields.dropdownYesNo(
-                        'match',
-                        item.fields['match'],
-                        labels['match'],
-                        options
-                        ) }}
-                        {% endif %}
+            {% if item.isField('match') %}
+            {{
+            fields.dropdownYesNo(
+            'match',
+            item.fields['match'],
+            labels['match'],
+            options
+            ) }}
+            {% endif %}
 
-                    </div> {# .row #}
-                </div> {# .row #}
-            </div> {# .flex-row #}
-        </div> {# .flex-column #}
-    </div> {# .flex-wrap #}
+        </div>
+    </div>
 
     {{ include('components/form/buttons.html.twig') }}
 </div>

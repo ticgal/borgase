@@ -34,10 +34,7 @@ class PluginBorgbaseProfile extends CommonDBTM
     public static $rightname = 'profile';
 
     /**
-     * getTypeName
-     *
-     * @param  mixed $nb
-     * @return string
+     * {@inheritDoc}
      */
     public static function getTypeName($nb = 0): string
     {
@@ -45,11 +42,7 @@ class PluginBorgbaseProfile extends CommonDBTM
     }
 
     /**
-     * getTabNameForItem
-     *
-     * @param  CommonGLPI $item
-     * @param  mixed $withtemplate
-     * @return string
+     * {@inheritDoc}
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string
     {
@@ -60,12 +53,7 @@ class PluginBorgbaseProfile extends CommonDBTM
     }
 
     /**
-     * displayTabContentForItem
-     *
-     * @param  CommonGLPI $item
-     * @param  mixed $tabnum
-     * @param  mixed $withtemplate
-     * @return boolean
+     * {@inheritDoc}
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): bool
     {

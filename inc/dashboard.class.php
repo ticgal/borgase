@@ -31,6 +31,12 @@
 
 class PluginBorgbaseDashboard extends CommonDBTM
 {
+    /**
+     * dashboardCards
+     *
+     * @param  mixed $cards
+     * @return array
+     */
     public static function dashboardCards($cards): array
     {
         $cards['plugin_borgbase_usagehistory'] = [

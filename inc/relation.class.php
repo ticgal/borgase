@@ -32,10 +32,7 @@
 class PluginBorgbaseRelation extends CommonDBRelation
 {
     /**
-     * getTypeName
-     *
-     * @param  mixed $nb
-     * @return string
+     * {@inheritDoc}
      */
     public static function getTypeName($nb = 0): string
     {
