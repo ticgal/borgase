@@ -51,14 +51,6 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public static function getIndexName(): string
-    {
-        return 'Borgbase';
-    }
-
-    /**
      * getIcon
      *
      * @return string
@@ -193,6 +185,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     public function checkComputerRepo($id): array
     {
         // Check if exists in our database
+        /** @var \DBmysql $DB */
         global $DB;
 
         // Request all
@@ -410,7 +403,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      * @param  mixed $usage
      * @return array
      */
-    public function convertUsage($usage): array
+    public static function convertUsage($usage): array
     {
         $ints = strtok($usage, '.');
         $count = strlen($ints);
@@ -519,7 +512,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
             $row = $res[0];
 
             //Usage into KB/MG/GB
-            $usage = $borgbase->convertUsage($row['currentUsage']);
+            $usage = $borgbase::convertUsage($row['currentUsage']);
 
             // Modifications
             $row['formatCreatedAt'] = $borgbase->formatDate($row['createdAt']);
@@ -580,11 +573,13 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     {
         $sopt = [];
 
+        $sopt['borgbase'] = ['name' => 'Borgbase'];
+
         if ($itemtype == 'Computer' && Session::haveRight(self::$rightname, READ)) {
             $sopt[self::$sopt] = [
                 'table'         => PluginBorgbaseBorgbase::getTable(),
                 'field'         => 'borg_name',
-                'name'          => 'Borgbase',
+                'name'          => __('Repository') . ' ' . __('Name'),
                 'datatype'      => 'text',
                 'forcegroupby'  => true,
                 'usehaving'     => true,
@@ -597,9 +592,134 @@ class PluginBorgbaseBorgbase extends CommonDBTM
                     ],
                 ],
             ];
+
+            $sopt[self::$sopt + 1] = [
+                'table'         => PluginBorgbaseBorgbase::getTable(),
+                'field'         => 'createdAt',
+                'name'          => __('Repository') . ' ' . __('Creation Date'),
+                'datatype'      => 'datetime',
+                'forcegroupby'  => true,
+                'usehaving'     => true,
+                'joinparams'    => [
+                    'beforejoin'    => [
+                        'table'         => PluginBorgbaseRelation::getTable(),
+                        'joinparams'    => [
+                            'jointype'      => 'itemtype_item',
+                        ],
+                    ],
+                ],
+            ];
+
+            $sopt[self::$sopt + 2] = [
+                'table'         => PluginBorgbaseBorgbase::getTable(),
+                'field'         => 'lastModified',
+                'name'          => __('Repository') . ' ' . __('Last Modification'),
+                'datatype'      => 'datetime',
+                'forcegroupby'  => true,
+                'usehaving'     => true,
+                'joinparams'    => [
+                    'beforejoin'    => [
+                        'table'         => PluginBorgbaseRelation::getTable(),
+                        'joinparams'    => [
+                            'jointype'      => 'itemtype_item',
+                        ],
+                    ],
+                ],
+            ];
+
+            $sopt[self::$sopt + 3] = [
+                'table'         => PluginBorgbaseBorgbase::getTable(),
+                'field'         => 'is_encrypted',
+                'name'          => __('Encrypted'),
+                'datatype'      => 'specific',
+                'forcegroupby'  => true,
+                'usehaving'     => true,
+                'searchtype'    => ['equals', 'notequals'],
+                'joinparams'    => [
+                    'beforejoin'    => [
+                        'table'         => PluginBorgbaseRelation::getTable(),
+                        'joinparams'    => [
+                            'jointype'      => 'itemtype_item',
+                        ],
+                    ],
+                ],
+            ];
+
+            $sopt[self::$sopt + 4] = [
+                'table'         => PluginBorgbaseBorgbase::getTable(),
+                'field'         => 'currentUsage',
+                'name'          => __('Current Usage', 'borgbase'),
+                'datatype'      => 'specific',
+                'forcegroupby'  => true,
+                'usehaving'     => true,
+                'searchtype'    => ['equals', 'notequals'],
+                'joinparams'    => [
+                    'beforejoin'    => [
+                        'table'         => PluginBorgbaseRelation::getTable(),
+                        'joinparams'    => [
+                            'jointype'      => 'itemtype_item',
+                        ],
+                    ],
+                ],
+            ];
+
+            $sopt[self::$sopt + 5] = [
+                'table'         => PluginBorgbaseBorgbase::getTable(),
+                'field'         => 'alertDays',
+                'name'          => __('Alert Days', 'borgbase'),
+                'datatype'      => 'number',
+                'forcegroupby'  => true,
+                'usehaving'     => true,
+                'searchtype'    => ['equals', 'notequals'],
+                'joinparams'    => [
+                    'beforejoin'    => [
+                        'table'         => PluginBorgbaseRelation::getTable(),
+                        'joinparams'    => [
+                            'jointype'      => 'itemtype_item',
+                        ],
+                    ],
+                ],
+            ];
         }
 
         return $sopt;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []): string
+    {
+        if (!is_array($values)) {
+            $values = [$field => $values];
+        }
+        switch ($field) {
+            case 'is_encrypted':
+                return Dropdown::showFromArray(
+                    $name,
+                    ['encrypted' => __('Yes'), 'unencrypted' => __('No')],
+                    ['display' => false, 'value' => $values[$field]],
+                );
+        }
+        return parent::getSpecificValueToSelect($field, $values, $options);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSpecificValueToDisplay($field, $values, array $options = []): string
+    {
+        if (!is_array($values)) {
+            $values = [$field => $values];
+        }
+        switch ($field) {
+            case 'is_encrypted':
+                return $values[$field] == 'encrypted' ? __('Yes') : __('No');
+            case 'currentUsage':
+                $usage = self::convertUsage($values[$field]);
+                return $usage['convert'] . ' ' . $usage['unit'];
+        }
+        return parent::getSpecificValueToDisplay($field, $values, $options);
     }
 
     /**
