@@ -54,7 +54,7 @@ if (isset($_POST['update'])) {
     $borgbase->update($_POST);
 
     // Checking again, apikey needs to be updated
-    if ($_POST['apikey']) {
+    if (isset($_POST['apikey']) && $_POST['apikey']) {
         $borgbase->linkAvailableRepos();
     }
 

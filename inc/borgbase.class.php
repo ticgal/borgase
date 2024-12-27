@@ -400,7 +400,9 @@ class PluginBorgbaseBorgbase extends CommonDBTM
         // API returns always {"data":{"x"}} we only want x content
         foreach ($array as $data) {
             foreach ($data as $request) {
-                $format = $request;
+                if (is_array($request)) {
+                    $format = $request;
+                }
             }
         }
 
