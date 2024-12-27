@@ -652,6 +652,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
                 'datatype'      => 'specific',
                 'forcegroupby'  => true,
                 'usehaving'     => true,
+                'nosearch'      => true,
                 'joinparams'    => [
                     'beforejoin'    => [
                         'table'         => PluginBorgbaseRelation::getTable(),
