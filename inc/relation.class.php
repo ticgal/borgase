@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * -------------------------------------------------------------------------
  * Borgbase plugin for GLPI
  * Copyright (C) 2022-2024 by the TICgal Team.

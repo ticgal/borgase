@@ -34,7 +34,7 @@
  *
  * @return boolean
  */
-function plugin_borgbase_install()
+function plugin_borgbase_install(): bool
 {
     $migration = new Migration(PLUGIN_BORGBASE_VERSION);
 
@@ -59,7 +59,7 @@ function plugin_borgbase_install()
  *
  * @return boolean
  */
-function plugin_borgbase_uninstall()
+function plugin_borgbase_uninstall(): bool
 {
     $migration = new Migration(PLUGIN_BORGBASE_VERSION);
 
