@@ -652,7 +652,6 @@ class PluginBorgbaseBorgbase extends CommonDBTM
                 'datatype'      => 'specific',
                 'forcegroupby'  => true,
                 'usehaving'     => true,
-                'searchtype'    => ['equals', 'notequals'],
                 'joinparams'    => [
                     'beforejoin'    => [
                         'table'         => PluginBorgbaseRelation::getTable(),
@@ -670,7 +669,6 @@ class PluginBorgbaseBorgbase extends CommonDBTM
                 'datatype'      => 'number',
                 'forcegroupby'  => true,
                 'usehaving'     => true,
-                'searchtype'    => ['equals', 'notequals'],
                 'joinparams'    => [
                     'beforejoin'    => [
                         'table'         => PluginBorgbaseRelation::getTable(),
@@ -697,7 +695,10 @@ class PluginBorgbaseBorgbase extends CommonDBTM
             case 'is_encrypted':
                 return Dropdown::showFromArray(
                     $name,
-                    ['encrypted' => __('Yes'), 'unencrypted' => __('No')],
+                    [
+                        'encrypted' => __('Encrypted', 'borgbase'),
+                        // 'unencrypted' => __('No')
+                    ],
                     ['display' => false, 'value' => $values[$field]],
                 );
         }
