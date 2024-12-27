@@ -29,10 +29,6 @@
  * ----------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 class PluginBorgbaseRelation extends CommonDBRelation
 {
     /**
@@ -50,10 +46,11 @@ class PluginBorgbaseRelation extends CommonDBRelation
      * install
      *
      * @param  Migration $migration
-     * @return boolean
+     * @return void
      */
-    public static function install(Migration $migration): bool
+    public static function install(Migration $migration): void
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $default_charset = DBConnection::getDefaultCharset();
@@ -78,24 +75,21 @@ class PluginBorgbaseRelation extends CommonDBRelation
                 COLLATE={$default_collation}";
             $DB->request($query) or die($DB->error());
         }
-
-        return true;
     }
 
     /**
      * uninstall
      *
      * @param  Migration $migration
-     * @return boolean
+     * @return void
      */
-    public static function uninstall(Migration $migration): bool
+    public static function uninstall(Migration $migration): void
     {
+        /** @var \DBmysql $DB */
         global $DB;
+
         $table = self::getTable();
         //$migration->displayMessage('Uninstalling ' . $table);
-
         //$DB->queryOrDie("DROP TABLE `$table`", $DB->error());
-
-        return true;
     }
 }

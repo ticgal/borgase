@@ -29,10 +29,6 @@
  * ----------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 class PluginBorgbaseDashboard extends CommonDBTM
 {
     public static function dashboardCards($cards): array

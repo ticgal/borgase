@@ -29,10 +29,6 @@
  * ----------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 class PluginBorgbaseCron extends CommonDBTM
 {
     /**
@@ -58,7 +54,9 @@ class PluginBorgbaseCron extends CommonDBTM
     */
     public static function cronBorgbaseUpdate($task = null): bool
     {
+        /** @var \DBmysql $DB */
         global $DB;
+
         $borgbase = new PluginBorgbaseBorgbase();
         $table = PluginBorgbaseBorgbase::getTable();
         foreach ($DB->request(['SELECT' => 'borg_id', 'FROM' => $table]) as $id => $row) {

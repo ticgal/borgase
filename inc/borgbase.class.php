@@ -29,15 +29,11 @@
  * ----------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 use Glpi\Application\View\TemplateRenderer;
 
 class PluginBorgbaseBorgbase extends CommonDBTM
 {
-    public static $rightname = 'Borgbase';
+    public static $rightname = 'plugin_borgbase_borgbase';
 
     public static $itemtype_1 = 'borgbase';
 
