@@ -29,12 +29,14 @@
  * ----------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 class PluginBorgbaseDashboard extends CommonDBTM
 {
+    /**
+     * dashboardCards
+     *
+     * @param  mixed $cards
+     * @return array
+     */
     public static function dashboardCards($cards): array
     {
         $cards['plugin_borgbase_usagehistory'] = [

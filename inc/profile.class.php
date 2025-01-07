@@ -29,19 +29,12 @@
  * ----------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 class PluginBorgbaseProfile extends CommonDBTM
 {
     public static $rightname = 'profile';
 
     /**
-     * getTypeName
-     *
-     * @param  mixed $nb
-     * @return string
+     * {@inheritDoc}
      */
     public static function getTypeName($nb = 0): string
     {
@@ -49,11 +42,7 @@ class PluginBorgbaseProfile extends CommonDBTM
     }
 
     /**
-     * getTabNameForItem
-     *
-     * @param  CommonGLPI $item
-     * @param  mixed $withtemplate
-     * @return string
+     * {@inheritDoc}
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string
     {
@@ -64,12 +53,7 @@ class PluginBorgbaseProfile extends CommonDBTM
     }
 
     /**
-     * displayTabContentForItem
-     *
-     * @param  CommonGLPI $item
-     * @param  mixed $tabnum
-     * @param  mixed $withtemplate
-     * @return boolean
+     * {@inheritDoc}
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): bool
     {
@@ -86,13 +70,13 @@ class PluginBorgbaseProfile extends CommonDBTM
      * @param  mixed $all
      * @return array
      */
-    static function getAllRights($all = false): array
+    public static function getAllRights($all = false): array
     {
         $rights = array(
             array(
-                'itemtype' => PluginBorgbaseBorgbase::class,
-                'label' => PluginBorgbaseBorgbase::getTypeName(),
-                'field' => PluginBorgbaseBorgbase::getIndexName()
+                'itemtype'  => PluginBorgbaseBorgbase::class,
+                'label'     => PluginBorgbaseBorgbase::getTypeName(),
+                'field'     => 'plugin_borgbase_borgbase',
             )
         );
 
@@ -138,13 +122,22 @@ class PluginBorgbaseProfile extends CommonDBTM
     /**
      * install
      *
+     * @param  Migration $migration
      * @return void
      */
-    public static function install(): void
+    public static function install(Migration $migration): void
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
-        $query = "SELECT id FROM glpi_profilerights WHERE name = '" . PluginBorgbaseBorgbase::getIndexName() . "'";
+        $migration->displayMessage('Installing profile rights');
+        $query = [
+            'SELECT' => 'id',
+            'FROM' => 'glpi_profilerights',
+            'WHERE' => [
+                'name' => 'plugin_borgbase_borgbase'
+            ]
+        ];
         $numRights = sizeof($DB->request($query));
         if ($numRights == 0) {
             foreach (PluginBorgbaseProfile::getAllRights() as $right) {
@@ -156,12 +149,14 @@ class PluginBorgbaseProfile extends CommonDBTM
     /**
      * uninstall
      *
+     * @param  Migration $migration
      * @return void
      */
-    public static function uninstall(): void
+    public static function uninstall(Migration $migration): void
     {
+        $migration->displayMessage('Remove profile rights');
         foreach (PluginBorgbaseProfile::getAllRights() as $right) {
-            //ProfileRight::deleteProfileRights([$right['field']]);
+            ProfileRight::deleteProfileRights([$right['field']]);
         }
     }
 }

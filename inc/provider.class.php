@@ -29,10 +29,6 @@
  * ----------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 class PluginBorgbaseProvider extends CommonDBTM
 {
     /**
@@ -169,6 +165,7 @@ class PluginBorgbaseProvider extends CommonDBTM
      */
     public static function numberOfLinkedRepositories($params = []): array
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $sub_query = new \QuerySubQuery([

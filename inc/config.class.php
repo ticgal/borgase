@@ -29,10 +29,6 @@
  * ----------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 use Glpi\Application\View\TemplateRenderer;
 
 class PluginBorgbaseConfig extends CommonDBTM
@@ -40,11 +36,7 @@ class PluginBorgbaseConfig extends CommonDBTM
     public static $rightname = 'config';
 
     /**
-     * getTabNameForItem
-     *
-     * @param  CommonGLPI $item
-     * @param  mixed $withtemplate
-     * @return string
+     * {@inheritDoc}
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string
     {
@@ -57,12 +49,7 @@ class PluginBorgbaseConfig extends CommonDBTM
     }
 
     /**
-     * displayTabContentForItem
-     *
-     * @param  CommonGLPI $item
-     * @param  mixed $tabnum
-     * @param  mixed $withtemplate
-     * @return boolean
+     * {@inheritDoc}
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): bool
     {
@@ -129,7 +116,9 @@ class PluginBorgbaseConfig extends CommonDBTM
      */
     public function linkAvailableRepos(): int
     {
+        /** @var \DBmysql $DB */
         global $DB;
+
         $borgbase = new PluginBorgbaseBorgbase();
         $repoList = $borgbase->getRepoList();
         $linkedRepos = 0;
@@ -159,11 +148,13 @@ class PluginBorgbaseConfig extends CommonDBTM
      * install
      *
      * @param  Migration $migration
-     * @return boolean
+     * @return void
      */
-    public static function install(Migration $migration): bool
+    public static function install(Migration $migration): void
     {
+        /** @var \DBmysql $DB */
         global $DB;
+
         $default_charset = DBConnection::getDefaultCharset();
         $default_collation = DBConnection::getDefaultCollation();
         $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
@@ -194,24 +185,21 @@ class PluginBorgbaseConfig extends CommonDBTM
                 ]
             );
         }
-
-        return true;
     }
 
     /**
      * uninstall
      *
      * @param  Migration $migration
-     * @return boolean
+     * @return void
      */
-    public static function uninstall(Migration $migration): bool
+    public static function uninstall(Migration $migration): void
     {
+        /** @var \DBmysql $DB */
         global $DB;
+
         $table = self::getTable();
         //$migration->displayMessage('Uninstalling ' . $table);
-
         //$DB->queryOrDie("DROP TABLE `$table`", $DB->error());
-
-        return true;
     }
 }
