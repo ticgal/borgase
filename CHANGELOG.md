@@ -1,6 +1,6 @@
 # Borgbase - GLPI Plugin CHANGELOG
 
-## [1.1.2] - 2024-12-27
+## [1.2.0] - 2024-12-27
 ### Added
 - More searcheable fields
 
