@@ -290,9 +290,9 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      *
      * @param  mixed $computerId
      * @param  mixed $repoId
-     * @return void
+     * @return bool
      */
-    public function unlinkRepo($computerId, $repoId)
+    public function unlinkRepo($computerId, $repoId): bool
     {
         // Check if exists in our database
         global $DB;
@@ -458,9 +458,9 @@ class PluginBorgbaseBorgbase extends CommonDBTM
                             'Computer',
                             $changes,
                             'PluginBorgbaseBorgbase',
-                            LOG::HISTORY_ADD_RELATION
+                            Log::HISTORY_ADD_RELATION
                         );
-                        HTML::redirect("computer.form.php?id=" . $id);
+                        Html::redirect("computer.form.php?id=" . $id);
                         exit;
                     }
                 }
@@ -728,7 +728,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      * install
      *
      * @param  Migration $migration
-     * @return boolean
+     * @return void
      */
     public static function install(Migration $migration): void
     {
@@ -739,7 +739,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
         $default_collation = DBConnection::getDefaultCollation();
         $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
 
-        $table = getTableForItemtype('PluginBorgbaseBorgbase');
+        $table = (new DbUtils())->getTableForItemtype('PluginBorgbaseBorgbase');
         if (!$DB->tableExists($table)) {
             $migration->displayMessage("Installing $table");
 
@@ -766,7 +766,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
             ) ENGINE=InnoDB
                 DEFAULT CHARSET={$default_charset}
                 COLLATE={$default_collation}";
-            $DB->request($query) or die($DB->error());
+            $DB->request($query);
         }
     }
 

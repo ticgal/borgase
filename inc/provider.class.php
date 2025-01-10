@@ -98,15 +98,9 @@ class PluginBorgbaseProvider extends CommonDBTM
             'label' => __('Storage usage', 'borgbase'),
         ];
         $data[] = [
-            'number' => 100 - $percentage,
+            'number' => 100 - (int) $percentage,
             'label' => __('Free storage', 'borgbase'),
         ];
-
-        if (count($data) === 0) {
-            $data = [
-                'nodata' => true
-            ];
-        }
 
         $provide = [
             'data'      => $data,

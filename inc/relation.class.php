@@ -54,7 +54,7 @@ class PluginBorgbaseRelation extends CommonDBRelation
         $default_collation = DBConnection::getDefaultCollation();
         $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
 
-        $table = getTableForItemtype('PluginBorgbaseRelation');
+        $table = (new DbUtils())->getTableForItemtype('PluginBorgbaseRelation');
         if (!$DB->tableExists($table)) {
             $migration->displayMessage("Installing $table");
 
@@ -70,7 +70,7 @@ class PluginBorgbaseRelation extends CommonDBRelation
             ) ENGINE=InnoDB
                 DEFAULT CHARSET={$default_charset}
                 COLLATE={$default_collation}";
-            $DB->request($query) or die($DB->error());
+            $DB->request($query);
         }
     }
 

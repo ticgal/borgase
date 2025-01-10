@@ -172,7 +172,7 @@ class PluginBorgbaseConfig extends CommonDBTM
 			)ENGINE=InnoDB DEFAULT CHARSET={$default_charset} 
             COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
-            $DB->request($query) or die($DB->error());
+            $DB->request($query);
 
             // Default config
             $DB->insert(

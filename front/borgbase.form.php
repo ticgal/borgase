@@ -60,7 +60,7 @@ if (isset($_POST['reload'])) {
                 'Computer',
                 $changes,
                 'PluginBorgbaseBorgbase',
-                LOG::HISTORY_DEL_RELATION
+                Log::HISTORY_DEL_RELATION
             );
         }
     }
@@ -87,7 +87,7 @@ if (isset($_POST['assoc']) && Session::haveRight(PluginBorgbaseBorgbase::$rightn
             'Computer',
             $changes,
             'PluginBorgbaseBorgbase',
-            LOG::HISTORY_ADD_RELATION
+            Log::HISTORY_ADD_RELATION
         );
     }
     Html::back();
