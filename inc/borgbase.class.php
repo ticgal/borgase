@@ -1,63 +1,51 @@
 <?php
-/*
--------------------------------------------------------------------------
-Borgbase plugin for GLPI
-Copyright (C) 2021-2022 by the TICgal Team.
-https://www.tic.gal/
--------------------------------------------------------------------------
-LICENSE
-This file is part of the Borgbase plugin.
-Borgbase plugin is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-Borgbase plugin is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-You should have received a copy of the GNU General Public License
-along with Borgbase. If not, see <http://www.gnu.org/licenses/>.
---------------------------------------------------------------------------
-@package  Borgbase
-@author    the TICgal team
-@copyright Copyright (c) 2021-2022 TICgal team
-@license   AGPL License 3.0 or (at your option) any later version
-http://www.gnu.org/licenses/agpl-3.0-standalone.html
-@link      https://www.tic.gal/
-@since     2021-2022
-----------------------------------------------------------------------
-*/
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
+/**
+ * -------------------------------------------------------------------------
+ * Borgbase plugin for GLPI
+ * Copyright (C) 2022-2024 by the TICgal Team.
+ * https://www.tic.gal/
+ * -------------------------------------------------------------------------
+ * LICENSE
+ * This file is part of the Borgbase plugin.
+ * Borgbase plugin is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ * Borgbase plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with Borgbase. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
+ * @package  Borgbase
+ * @author    the TICgal team
+ * @copyright Copyright (c) 2022-2024 TICgal team
+ * @license   AGPL License 3.0 or (at your option) any later version
+ * http://www.gnu.org/licenses/agpl-3.0-standalone.html
+ * @link      https://www.tic.gal/
+ * @since     2022
+ * ----------------------------------------------------------------------
+ */
 
 use Glpi\Application\View\TemplateRenderer;
 
 class PluginBorgbaseBorgbase extends CommonDBTM
 {
-    static $rightname = 'Borgbase';
-    static $itemtype_1 = 'borgbase';
-    static $sopt = 1468;
+    public static $rightname = 'plugin_borgbase_borgbase';
+
+    public static $itemtype_1 = 'borgbase';
+
+    public static $sopt = 1468;
+
     public $dohistory = true;
 
-    /**
-     * getTypeName
-     *
-     * @param  mixed $nb
-     * @return string
-     */
-    public static function getTypeName($nb = 0)
-    {
-        return 'Borgbase';
-    }
 
     /**
-     * getIndexName
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    public static function getIndexName()
+    public static function getTypeName($nb = 0): string
     {
         return 'Borgbase';
     }
@@ -67,22 +55,15 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      *
      * @return string
      */
-    public static function getIcon()
+    public static function getIcon(): string
     {
         return 'fa-solid fa-hard-drive';
     }
 
-
-    // Display Tab
-
     /**
-     * getTabNameForItem
-     *
-     * @param  CommonGLPI $item
-     * @param  mixed $withtemplate
-     * @return string
+     * {@inheritDoc}
      */
-    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string
     {
         switch ($item::getType()) {
             case 'Computer':
@@ -92,14 +73,9 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     }
 
     /**
-     * displayTabContentForItem
-     *
-     * @param  CommonGLPI $item
-     * @param  mixed $tabnum
-     * @param  mixed $withtemplate
-     * @return boolean
+     * {@inheritDoc}
      */
-    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): bool
     {
         switch ($item::getType()) {
             case 'Computer':
@@ -117,15 +93,15 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      * @param  mixed $query
      * @return string
      */
-    public function request($query = '')
+    public function request($query = ''): string
     {
         if ($query) {
-            $config = new PluginBorgbaseConfig;
+            $config = new PluginBorgbaseConfig();
             $config->getFromDB(1);
             $token = $config->fields['apikey'];
 
             if ($token) {
-                $glpikey = new GLPIKey;
+                $glpikey = new GLPIKey();
 
                 $header = [
                     'Content-Type: application/json',
@@ -156,20 +132,20 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      * @param  mixed $repoId
      * @return array
      */
-    public function getRepo($repoId)
+    public function getRepo($repoId): array
     {
         $query = '{ repo(repoId:\"' . $repoId . '\") {id,name,alertDays,borgVersion,region,encryption,createdAt,lastModified,compactionEnabled,compactionInterval,compactionIntervalUnit,compactionHour,compactionHourTimezone,repoPath,currentUsage}}';
         $repo = $this->request($query);
         return $this->formatRawRequest($repo);
     }
-        
+
     /**
      * getRepoByName
      *
      * @param  string $name
      * @return array
      */
-    public function getRepoByName($name)
+    public function getRepoByName($name): array
     {
         $query = '{ repoList(name:\"' . $name . '\") {id, name,alertDays,borgVersion,encryption,region,createdAt,lastModified,compactionEnabled,compactionInterval, compactionIntervalUnit,compactionHour,compactionHourTimezone,repoPath,currentUsage}}';
         $repo = $this->request($query);
@@ -181,7 +157,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      *
      * @return array
      */
-    public function getRepoList()
+    public function getRepoList(): array
     {
         $query = '{ repoList {id,name,alertDays,borgVersion,region,encryption,createdAt,lastModified,compactionEnabled,compactionInterval,compactionIntervalUnit,compactionHour,compactionHourTimezone,repoPath,currentUsage}}';
         $repoList = $this->request($query);
@@ -206,9 +182,10 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      * @param  mixed $id
      * @return array
      */
-    public function checkComputerRepo($id)
+    public function checkComputerRepo($id): array
     {
         // Check if exists in our database
+        /** @var \DBmysql $DB */
         global $DB;
 
         // Request all
@@ -218,9 +195,9 @@ class PluginBorgbaseBorgbase extends CommonDBTM
                 'computer_id' => $id
             ]
         ]);
-        
+
         $rows = [];
-        foreach($iterator as $data){
+        foreach ($iterator as $data) {
             array_push($rows, $data);
         }
 
@@ -233,22 +210,22 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      * @param  mixed $repoID
      * @return array
      */
-    public function checkLink($repoID)
+    public function checkLink($repoID): array
     {
         // Check if exists relation // computer_id
         global $DB;
-        
+
         $iterator = $DB->request([
             'SELECT' => 'computer_id',
             'FROM' => $this->getTable(),
             'WHERE' => [
-                'borg_id' => $repoID,
-                'computer_id' => ['NOT LIKE', '']
+                'borg_id'       => $repoID,
+                'computer_id'   => ['NOT LIKE', '']
             ]
         ]);
-        
+
         $rows = [];
-        foreach($iterator as $data){
+        foreach ($iterator as $data) {
             array_push($rows, $data);
         }
 
@@ -273,21 +250,21 @@ class PluginBorgbaseBorgbase extends CommonDBTM
             $DB->insert(
                 $table,
                 [
-                    'borg_id' => $repo['id'],
-                    'borg_name' => $repo['name'],
-                    'computer_id' => $id,
-                    'alertDays' => $repo['alertDays'],
-                    'borg_version' => $repo['borgVersion'],
-                    'is_encrypted' => $repo['encryption'],
-                    'region' => $repo['region'],
-                    'createdAt' => $repo['createdAt'],
-                    'lastModified' => $repo['lastModified'],
-                    'compactionInterval' => $repo['compactionInterval'],
-                    'compactionIntervalUnit' => $repo['compactionIntervalUnit'],
-                    'compactionHour' => $repo['compactionHour'],
-                    'compactionHourTimezone' => $repo['compactionHourTimezone'],
-                    'repoPath' => $repo['repoPath'],
-                    'currentUsage' => $repo['currentUsage'],
+                    'borg_id'                   => $repo['id'],
+                    'borg_name'                 => $repo['name'],
+                    'computer_id'               => $id,
+                    'alertDays'                 => $repo['alertDays'],
+                    'borg_version'              => $repo['borgVersion'],
+                    'is_encrypted'              => $repo['encryption'],
+                    'region'                    => $repo['region'],
+                    'createdAt'                 => $repo['createdAt'],
+                    'lastModified'              => $repo['lastModified'],
+                    'compactionInterval'        => $repo['compactionInterval'],
+                    'compactionIntervalUnit'    => $repo['compactionIntervalUnit'],
+                    'compactionHour'            => $repo['compactionHour'],
+                    'compactionHourTimezone'    => $repo['compactionHourTimezone'],
+                    'repoPath'                  => $repo['repoPath'],
+                    'currentUsage'              => $repo['currentUsage'],
                 ]
             );
 
@@ -296,8 +273,8 @@ class PluginBorgbaseBorgbase extends CommonDBTM
             $DB->insert(
                 PluginBorgbaseRelation::getTable(),
                 [
-                    'items_id' => $id,
-                    'itemtype' => 'Computer',
+                    'items_id'  => $id,
+                    'itemtype'  => 'Computer',
                     'plugin_borgbase_borgbases_id' => $lastId
                 ]
             );
@@ -313,9 +290,9 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      *
      * @param  mixed $computerId
      * @param  mixed $repoId
-     * @return void
+     * @return bool
      */
-    public function unlinkRepo($computerId, $repoId)
+    public function unlinkRepo($computerId, $repoId): bool
     {
         // Check if exists in our database
         global $DB;
@@ -343,28 +320,29 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      * @param  mixed $repoId
      * @return boolean
      */
-    public function reloadRepo($repoId)
+    public function reloadRepo($repoId): bool
     {
+        /** @var \DBmysql $DB */
         global $DB;
-        $repo = $this->getRepo($repoId);
 
-        if ($repo) {
+        $repo = $this->getRepo($repoId);
+        if (!empty($repo)) {
             $DB->update(
                 $this->getTable(),
                 [
-                    'alertDays' => $repo['alertDays'],
-                    'borg_version' => $repo['borgVersion'],
-                    'is_encrypted' => $repo['encryption'],
-                    'region' => $repo['region'],
-                    'createdAt' => $repo['createdAt'],
-                    'lastModified' => $repo['lastModified'],
-                    'compactionInterval' => $repo['compactionInterval'],
-                    'compactionIntervalUnit' => $repo['compactionIntervalUnit'],
-                    'compactionHour' => $repo['compactionHour'],
-                    'compactionHourTimezone' => $repo['compactionHourTimezone'],
-                    'repoPath' => $repo['repoPath'],
-                    'currentUsage' => $repo['currentUsage'],
-                    'date_mod' => date('Y-m-d H:i:s'),
+                    'alertDays'                 => $repo['alertDays'],
+                    'borg_version'              => $repo['borgVersion'],
+                    'is_encrypted'              => $repo['encryption'],
+                    'region'                    => $repo['region'],
+                    'createdAt'                 => $repo['createdAt'],
+                    'lastModified'              => $repo['lastModified'],
+                    'compactionInterval'        => $repo['compactionInterval'],
+                    'compactionIntervalUnit'    => $repo['compactionIntervalUnit'],
+                    'compactionHour'            => $repo['compactionHour'],
+                    'compactionHourTimezone'    => $repo['compactionHourTimezone'],
+                    'repoPath'                  => $repo['repoPath'],
+                    'currentUsage'              => $repo['currentUsage'],
+                    'date_mod'                  => date('Y-m-d H:i:s'),
                 ],
                 [
                     'WHERE' => ['borg_id' => $repoId],
@@ -374,7 +352,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
             return true;
         }
 
-        return '';
+        return false;
     }
 
     // Formating and display
@@ -385,40 +363,48 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      * @param  mixed $raw
      * @return array
      */
-    public function formatRawRequest($raw)
+    public function formatRawRequest($raw): array
     {
+        $format = [];
         $array = json_decode($raw, true);
+        if (!$array) {
+            return $format;
+        }
 
         // API returns always {"data":{"x"}} we only want x content
-        $format = [];
-        foreach ($array as $data) {
-            foreach ($data as $request) {
-                $format = $request;
+        foreach ($array as $key => $data) {
+            if ($key == 'data') {
+                if (isset($data['repo']) && !empty($data['repo'])) {
+                    $format = $data['repo'];
+                }
+                break;
             }
         }
 
         return $format;
     }
-        
+
     /**
      * formatDate
      *
      * @param  mixed $date
      * @return string
      */
-    public function formatDate($date){
+    public function formatDate($date): string
+    {
         $format = 'd F Y, h:i:s A';
         $newDate = date_create($date);
         return date_format($newDate, $format);
     }
-    
+
     /**
      * convertUsage
      *
      * @param  mixed $usage
      * @return array
      */
-    public function convertUsage($usage){
+    public static function convertUsage($usage): array
+    {
         $ints = strtok($usage, '.');
         $count = strlen($ints);
         $conversedUsage = 0;
@@ -438,7 +424,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
                 $unit = 'TB';
                 break;
         }
-        
+
         return ['convert' => $conversedUsage, 'unit' => $unit ];
     }
 
@@ -451,45 +437,45 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      */
     public function automaticLink($computer, $repoList)
     {
-        $config = new PluginBorgbaseConfig;
+        $config = new PluginBorgbaseConfig();
         $config->getFromDB(1);
 
-            $id = $computer->fields['id'];
-            // Automatic insert into BD
-            foreach ($repoList as $repo) {
-                // Trimming to ignore white spaces
-                if (strcmp(trim($computer->fields['name']), trim($repo['name'])) == 0) {
-                    if ($config->fields['match']) {
-                        $feedback = $this->linkRepo($repo, $id);
-                        if ($feedback) {
-                            // Changes
-                            $changes[0] = $id;
-                            $changes[1] = "";
-                            $changes[2] = sprintf(__('%s, ' . __('automatically linked')), $repo['id']);
+        $id = $computer->fields['id'];
+        // Automatic insert into BD
+        foreach ($repoList as $repo) {
+            // Trimming to ignore white spaces
+            if (strcmp(trim($computer->fields['name']), trim($repo['name'])) == 0) {
+                if ($config->fields['match']) {
+                    $feedback = $this->linkRepo($repo, $id);
+                    if ($feedback) {
+                        // Changes
+                        $changes[0] = $id;
+                        $changes[1] = "";
+                        $changes[2] = sprintf(__('%s, ' . __('automatically linked')), $repo['id']);
 
-                            Log::history(
-                                $id,
-                                'Computer',
-                                $changes,
-                                'PluginBorgbaseBorgbase',
-                                LOG::HISTORY_ADD_RELATION
-                            );
-                            HTML::redirect("computer.form.php?id=" . $id);
-                            exit;
-                        }
+                        Log::history(
+                            $id,
+                            'Computer',
+                            $changes,
+                            'PluginBorgbaseBorgbase',
+                            Log::HISTORY_ADD_RELATION
+                        );
+                        Html::redirect("computer.form.php?id=" . $id);
+                        exit;
                     }
                 }
             }
+        }
 
         return false;
     }
-    
+
     /**
      * displayTab
      *
      * @return boolean
      */
-    public static function displayTab()
+    public static function displayTab(): bool
     {
         if (!Session::haveRight(self::$rightname, READ)) {
             return false;
@@ -526,8 +512,8 @@ class PluginBorgbaseBorgbase extends CommonDBTM
             $row = $res[0];
 
             //Usage into KB/MG/GB
-            $usage = $borgbase->convertUsage($row['currentUsage']);
-            
+            $usage = $borgbase::convertUsage($row['currentUsage']);
+
             // Modifications
             $row['formatCreatedAt'] = $borgbase->formatDate($row['createdAt']);
             $row['formatLastModified'] = $borgbase->formatDate($row['lastModified']);
@@ -540,7 +526,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
             $data = $row;
             $templatePath = "@borgbase/repository.html.twig";
         }
-        
+
         $labels = [
             'notRegistered' => __('Not registered', 'borgbase'),
             'selectRepo' => __('Select a repository', 'borgbase'),
@@ -583,23 +569,112 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      * @param  mixed $itemtype
      * @return array
      */
-    public static function getAddSearchOptions($itemtype)
+    public static function getAddSearchOptions($itemtype): array
     {
         $sopt = [];
 
+        $sopt['borgbase'] = ['name' => 'Borgbase'];
+
         if ($itemtype == 'Computer' && Session::haveRight(self::$rightname, READ)) {
             $sopt[self::$sopt] = [
-                'table' => PluginBorgbaseBorgbase::getTable(),
-                'field' => 'borg_name',
-                'name' => 'Borgbase',
-                'datatype' => 'text',
-                'forcegroupby' => true,
-                'usehaving' => true,
-                'joinparams' => [
-                    'beforejoin' => [
-                        'table' => PluginBorgbaseRelation::getTable(),
-                        'joinparams' => [
-                            'jointype' => 'itemtype_item',
+                'table'         => PluginBorgbaseBorgbase::getTable(),
+                'field'         => 'borg_name',
+                'name'          => __('Repository') . ' ' . __('Name'),
+                'datatype'      => 'text',
+                'forcegroupby'  => true,
+                'usehaving'     => true,
+                'joinparams'    => [
+                    'beforejoin'    => [
+                        'table'         => PluginBorgbaseRelation::getTable(),
+                        'joinparams'    => [
+                            'jointype'      => 'itemtype_item',
+                        ],
+                    ],
+                ],
+            ];
+
+            $sopt[self::$sopt + 1] = [
+                'table'         => PluginBorgbaseBorgbase::getTable(),
+                'field'         => 'createdAt',
+                'name'          => __('Repository') . ' ' . __('Creation Date'),
+                'datatype'      => 'datetime',
+                'forcegroupby'  => true,
+                'usehaving'     => true,
+                'joinparams'    => [
+                    'beforejoin'    => [
+                        'table'         => PluginBorgbaseRelation::getTable(),
+                        'joinparams'    => [
+                            'jointype'      => 'itemtype_item',
+                        ],
+                    ],
+                ],
+            ];
+
+            $sopt[self::$sopt + 2] = [
+                'table'         => PluginBorgbaseBorgbase::getTable(),
+                'field'         => 'lastModified',
+                'name'          => __('Repository') . ' ' . __('Last Modification'),
+                'datatype'      => 'datetime',
+                'forcegroupby'  => true,
+                'usehaving'     => true,
+                'joinparams'    => [
+                    'beforejoin'    => [
+                        'table'         => PluginBorgbaseRelation::getTable(),
+                        'joinparams'    => [
+                            'jointype'      => 'itemtype_item',
+                        ],
+                    ],
+                ],
+            ];
+
+            $sopt[self::$sopt + 3] = [
+                'table'         => PluginBorgbaseBorgbase::getTable(),
+                'field'         => 'is_encrypted',
+                'name'          => __('Encrypted'),
+                'datatype'      => 'specific',
+                'forcegroupby'  => true,
+                'usehaving'     => true,
+                'searchtype'    => ['equals', 'notequals'],
+                'joinparams'    => [
+                    'beforejoin'    => [
+                        'table'         => PluginBorgbaseRelation::getTable(),
+                        'joinparams'    => [
+                            'jointype'      => 'itemtype_item',
+                        ],
+                    ],
+                ],
+            ];
+
+            $sopt[self::$sopt + 4] = [
+                'table'         => PluginBorgbaseBorgbase::getTable(),
+                'field'         => 'currentUsage',
+                'name'          => __('Current Usage', 'borgbase'),
+                'datatype'      => 'specific',
+                'forcegroupby'  => true,
+                'usehaving'     => true,
+                'nosearch'      => true,
+                'joinparams'    => [
+                    'beforejoin'    => [
+                        'table'         => PluginBorgbaseRelation::getTable(),
+                        'joinparams'    => [
+                            'jointype'      => 'itemtype_item',
+                        ],
+                    ],
+                ],
+            ];
+
+            $sopt[self::$sopt + 5] = [
+                'table'         => PluginBorgbaseBorgbase::getTable(),
+                'field'         => 'alertDays',
+                'name'          => __('Alert Days', 'borgbase'),
+                'datatype'      => 'number',
+                'forcegroupby'  => true,
+                'usehaving'     => true,
+                'joinparams'    => [
+                    'beforejoin'    => [
+                        'table'         => PluginBorgbaseRelation::getTable(),
+                        'joinparams'    => [
+                            'jointype'      => 'itemtype_item',
                         ],
                     ],
                 ],
@@ -610,20 +685,61 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []): string
+    {
+        if (!is_array($values)) {
+            $values = [$field => $values];
+        }
+        switch ($field) {
+            case 'is_encrypted':
+                return Dropdown::showFromArray(
+                    $name,
+                    [
+                        'encrypted' => __('Encrypted', 'borgbase'),
+                        // 'unencrypted' => __('No')
+                    ],
+                    ['display' => false, 'value' => $values[$field]],
+                );
+        }
+        return parent::getSpecificValueToSelect($field, $values, $options);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSpecificValueToDisplay($field, $values, array $options = []): string
+    {
+        if (!is_array($values)) {
+            $values = [$field => $values];
+        }
+        switch ($field) {
+            case 'is_encrypted':
+                return $values[$field] == 'encrypted' ? __('Yes') : __('No');
+            case 'currentUsage':
+                $usage = self::convertUsage($values[$field]);
+                return $usage['convert'] . ' ' . $usage['unit'];
+        }
+        return parent::getSpecificValueToDisplay($field, $values, $options);
+    }
+
+    /**
      * install
      *
-     * @param  mixed $migration
-     * @return boolean
+     * @param  Migration $migration
+     * @return void
      */
-    public static function install(Migration $migration)
+    public static function install(Migration $migration): void
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $default_charset = DBConnection::getDefaultCharset();
         $default_collation = DBConnection::getDefaultCollation();
         $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
 
-        $table = getTableForItemtype('PluginBorgbaseBorgbase');
+        $table = (new DbUtils())->getTableForItemtype('PluginBorgbaseBorgbase');
         if (!$DB->tableExists($table)) {
             $migration->displayMessage("Installing $table");
 
@@ -650,26 +766,24 @@ class PluginBorgbaseBorgbase extends CommonDBTM
             ) ENGINE=InnoDB
                 DEFAULT CHARSET={$default_charset}
                 COLLATE={$default_collation}";
-            $DB->queryOrDie($query, $DB->error());
+            $DB->request($query);
         }
-
-        return true;
     }
 
     /**
      * uninstall
      *
-     * @param  mixed $migration
-     * @return boolean
+     * @param  Migration $migration
+     * @return void
      */
-    public static function uninstall(Migration $migration)
+    public static function uninstall(Migration $migration): void
     {
+        /** @var \DBmysql $DB */
         global $DB;
+
         $table = self::getTable();
         //$migration->displayMessage('Uninstalling ' . $table);
 
         //$DB->queryOrDie("DROP TABLE `$table`", $DB->error());
-
-        return true;
     }
 }
