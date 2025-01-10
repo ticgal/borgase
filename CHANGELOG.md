@@ -1,5 +1,9 @@
 # Borgbase - GLPI Plugin CHANGELOG
 
+## [1.1.3] - 2025-01-10
+### Fixed
+- Cron for reloading data, avoiding empty or inexistent repos
+
 ## [1.1.2] - 2024-12-27
 ### Added
 - More searcheable fields
