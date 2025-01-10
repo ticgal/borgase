@@ -326,9 +326,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
         global $DB;
 
         $repo = $this->getRepo($repoId);
-        Toolbox::logInFile('borgbase-debug', print_r($repo, true) . PHP_EOL);
-
-        if ($repo) {
+        if (!empty($repo)) {
             $DB->update(
                 $this->getTable(),
                 [
@@ -375,8 +373,11 @@ class PluginBorgbaseBorgbase extends CommonDBTM
 
         // API returns always {"data":{"x"}} we only want x content
         foreach ($array as $key => $data) {
-            if ($key == 'data' && is_array($data) && !empty($data)) {
-                $format = $data;
+            if ($key == 'data') {
+                if (isset($data['repo']) && !empty($data['repo'])) {
+                    $format = $data['repo'];
+                }
+                break;
             }
         }
 

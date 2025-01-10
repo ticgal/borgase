@@ -49,10 +49,10 @@ class PluginBorgbaseCron extends CommonDBTM
     /**
     * cronBorgbaseUpdate
     *
-    * @param  mixed $task
+    * @param  CronTask $task
     * @return boolean
     */
-    public static function cronBorgbaseUpdate($task = null): bool
+    public static function cronBorgbaseUpdate(CronTask $task = null): bool
     {
         /** @var \DBmysql $DB */
         global $DB;
@@ -60,7 +60,9 @@ class PluginBorgbaseCron extends CommonDBTM
         $borgbase = new PluginBorgbaseBorgbase();
         $table = PluginBorgbaseBorgbase::getTable();
         foreach ($DB->request(['SELECT' => 'borg_id', 'FROM' => $table]) as $id => $row) {
-            $borgbase->reloadRepo($row['borg_id']);
+            if ($borgbase->reloadRepo($row['borg_id'])) {
+                $task->addVolume(1);
+            }
         }
 
         return true;
