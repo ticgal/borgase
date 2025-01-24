@@ -31,6 +31,9 @@
 
 use Glpi\Application\View\TemplateRenderer;
 
+/**
+ * Borgbase API
+ */
 class PluginBorgbaseBorgbase extends CommonDBTM
 {
     public static $rightname = 'plugin_borgbase_borgbase';
@@ -125,6 +128,32 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     }
 
     // Requests
+    /**
+     * getCommonFields
+     *
+     * @return string
+     */
+    private function getRepoCommonFields(): string
+    {
+        $fields = [
+            'id',
+            'name',
+            'alertDays',
+            'borgVersion',
+            'region',
+            'encryption',
+            'createdAt',
+            'lastModified',
+            'compactionEnabled',
+            'compactionInterval',
+            'compactionIntervalUnit',
+            'compactionHour',
+            'compactionHourTimezone',
+            'repoPath',
+            'currentUsage'
+        ];
+        return implode(',', $fields);
+    }
 
     /**
      * getRepo
@@ -134,7 +163,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      */
     public function getRepo($repoId): array
     {
-        $query = '{ repo(repoId:\"' . $repoId . '\") {id,name,alertDays,borgVersion,region,encryption,createdAt,lastModified,compactionEnabled,compactionInterval,compactionIntervalUnit,compactionHour,compactionHourTimezone,repoPath,currentUsage}}';
+        $query = '{ repo(repoId:\"' . $repoId . '\") {' . self::getRepoCommonFields() . '}}';
         $repo = $this->request($query);
         return $this->formatRawRequest($repo);
     }
@@ -147,7 +176,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      */
     public function getRepoByName($name): array
     {
-        $query = '{ repoList(name:\"' . $name . '\") {id, name,alertDays,borgVersion,encryption,region,createdAt,lastModified,compactionEnabled,compactionInterval, compactionIntervalUnit,compactionHour,compactionHourTimezone,repoPath,currentUsage}}';
+        $query = '{ repoList(name:\"' . $name . '\") {' . self::getRepoCommonFields() . '}}';
         $repo = $this->request($query);
         return $this->formatRawRequest($repo);
     }
@@ -159,7 +188,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      */
     public function getRepoList(): array
     {
-        $query = '{ repoList {id,name,alertDays,borgVersion,region,encryption,createdAt,lastModified,compactionEnabled,compactionInterval,compactionIntervalUnit,compactionHour,compactionHourTimezone,repoPath,currentUsage}}';
+        $query = '{ repoList {' . self::getRepoCommonFields() . '}}';
         $repoList = $this->request($query);
         return $this->formatRawRequest($repoList);
     }
@@ -169,11 +198,11 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      *
      * @return array
      */
-    public function getCurrentUsage()
+    public function getCurrentUsage(): array
     {
         $query = '{ overageList {usedGb,date,plan{includedSize}}}';
-        $req = $this->request($query);
-        return $this->formatRawRequest($req);
+        $req = $this->formatRawRequest($this->request($query));
+        return $req['overageList'] ?? [];
     }
 
     /**
@@ -213,6 +242,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     public function checkLink($repoID): array
     {
         // Check if exists relation // computer_id
+        /** @var \DBmysql $DB */
         global $DB;
 
         $iterator = $DB->request([
@@ -376,6 +406,8 @@ class PluginBorgbaseBorgbase extends CommonDBTM
             if ($key == 'data') {
                 if (isset($data['repo']) && !empty($data['repo'])) {
                     $format = $data['repo'];
+                } elseif (!empty($data)) {
+                    $format = $data;
                 }
                 break;
             }
@@ -573,9 +605,9 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     {
         $sopt = [];
 
-        $sopt['borgbase'] = ['name' => 'Borgbase'];
-
         if ($itemtype == 'Computer' && Session::haveRight(self::$rightname, READ)) {
+            $sopt['borgbase'] = ['name' => 'Borgbase'];
+
             $sopt[self::$sopt] = [
                 'table'         => PluginBorgbaseBorgbase::getTable(),
                 'field'         => 'borg_name',
@@ -742,7 +774,6 @@ class PluginBorgbaseBorgbase extends CommonDBTM
         $table = (new DbUtils())->getTableForItemtype('PluginBorgbaseBorgbase');
         if (!$DB->tableExists($table)) {
             $migration->displayMessage("Installing $table");
-
             $query = "CREATE TABLE `$table` (
                 `id`         				INT {$default_key_sign} NOT NULL AUTO_INCREMENT,
                 `borg_id` 				    VARCHAR(8) NOT NULL,
@@ -766,7 +797,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
             ) ENGINE=InnoDB
                 DEFAULT CHARSET={$default_charset}
                 COLLATE={$default_collation}";
-            $DB->request($query);
+            $DB->doQueryOrDie($query, $DB->error());
         }
     }
 
