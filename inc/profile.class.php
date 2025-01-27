@@ -29,6 +29,9 @@
  * ----------------------------------------------------------------------
  */
 
+/**
+ * Profile
+ */
 class PluginBorgbaseProfile extends CommonDBTM
 {
     public static $rightname = 'profile';

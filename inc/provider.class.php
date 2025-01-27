@@ -29,7 +29,10 @@
  * ----------------------------------------------------------------------
  */
 
-class PluginBorgbaseProvider extends CommonDBTM
+/**
+ * Provider
+ */
+class PluginBorgbaseProvider
 {
     /**
      * usageHistory
@@ -48,10 +51,8 @@ class PluginBorgbaseProvider extends CommonDBTM
         krsort($usages);
 
         foreach ($usages as $usage) {
-            $dateParts = explode("-", $usage['date']);
-            $date = $dateParts[2] . '/' . $dateParts[1]; // day/month
-
-            $use = number_format($usage['usedGb'], 2, '.');
+            $date = date('d/m', strtotime($usage['date']));
+            $use = number_format($usage['usedGb'], 2, '.', '');
 
             $data[] = [
                 'number' => $use,
@@ -66,9 +67,9 @@ class PluginBorgbaseProvider extends CommonDBTM
         }
 
         $provide = [
-            'data' => $data,
+            'data'  => $data,
             'label' => 'Borgbase - ' . __('Total Usage History') . ' (GB)',
-            'icon' => PluginBorgbaseBorgbase::getIcon()
+            'icon'  => PluginBorgbaseBorgbase::getIcon()
         ];
 
         return $provide;
@@ -97,14 +98,19 @@ class PluginBorgbaseProvider extends CommonDBTM
             'number' => $percentage,
             'label' => __('Storage usage', 'borgbase'),
         ];
-        $data[] = [
-            'number' => 100 - (int) $percentage,
-            'label' => __('Free storage', 'borgbase'),
-        ];
+
+        // percentage can be greater than 100
+        // borgbase has a plan of 1TB up to flexible 4TB for example
+        if ($percentage < 100) {
+            $data[] = [
+                'number' => $limitUsage - $currentUsage,
+                'label' => __('Free storage', 'borgbase'),
+            ];
+        }
 
         $provide = [
             'data'      => $data,
-            'label'     => 'Borgbase - ' . __('Total Usage Percentage', 'borgbase'),
+            'label'     => 'Borgbase - ' . __('Total Usage Percentage', 'borgbase') . ' (%)',
             'icon'      => PluginBorgbaseBorgbase::getIcon()
         ];
 
@@ -179,12 +185,15 @@ class PluginBorgbaseProvider extends CommonDBTM
         $linkedRepositories = $result['count'];
 
         $search_url = Computer::getSearchURL();
-        $search_criteria['criteria'][] = [
-            'link'       => '',
-            'field'      => PluginBorgbaseBorgbase::$sopt,
-            'searchtype' => 'notcontains',
-            'value'      => 'null'
-        ];
+        $search_criteria = [];
+        if (Session::haveRight(PluginBorgbaseBorgbase::$rightname, READ)) {
+            $search_criteria['criteria'][] = [
+                'link'       => '',
+                'field'      => PluginBorgbaseBorgbase::$sopt,
+                'searchtype' => 'notcontains',
+                'value'      => 'null'
+            ];
+        }
 
         $url = $search_url . (str_contains($search_url, '?') ? '&' : '?') . Toolbox::append_params([
             $search_criteria,

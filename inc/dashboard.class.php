@@ -29,22 +29,29 @@
  * ----------------------------------------------------------------------
  */
 
-class PluginBorgbaseDashboard extends CommonDBTM
+/**
+ * Dashboard
+ */
+class PluginBorgbaseDashboard
 {
     /**
      * dashboardCards
      *
-     * @param  mixed $cards
+     * @param  array|null $cards
      * @return array
      */
-    public static function dashboardCards($cards): array
+    public static function dashboardCards(?array $cards): array
     {
+        if (is_null($cards)) {
+            $cards = [];
+        }
+
         $cards['plugin_borgbase_usagehistory'] = [
             'widgettype'    => ['bar', 'line'],
             'label'         => __('Usage History', 'borgbase'),
             'group'         => 'Borgbase',
             'filters'       => ['dates'],
-            'provider'      => 'PluginBorgbaseProvider::usageHistory'
+            'provider'      => PluginBorgbaseProvider::class . '::usageHistory'
         ];
 
         $cards['plugin_borgbase_usedquotapercentage'] = [
@@ -52,7 +59,7 @@ class PluginBorgbaseDashboard extends CommonDBTM
             'label'         => __('Used Quota', 'borgbase'),
             'group'         => 'Borgbase',
             'filters'       => [],
-            'provider'      => 'PluginBorgbaseProvider::usageQuotaPer'
+            'provider'      => PluginBorgbaseProvider::class . '::usageQuotaPer'
         ];
 
         $cards['plugin_borgbase_numberrepositories'] = [
@@ -60,7 +67,7 @@ class PluginBorgbaseDashboard extends CommonDBTM
             'label'         => __('Number of Repositories', 'borgbase'),
             'group'         => 'Borgbase',
             'filters'       => [],
-            'provider'      => 'PluginBorgbaseProvider::numberrepositories'
+            'provider'      => PluginBorgbaseProvider::class . '::numberrepositories'
         ];
 
         $cards['plugin_borgbase_currentuse'] = [
@@ -68,7 +75,7 @@ class PluginBorgbaseDashboard extends CommonDBTM
             'label'         => __('Current Use', 'borgbase'),
             'group'         => 'Borgbase',
             'filters'       => [],
-            'provider'      => 'PluginBorgbaseProvider::currentuse'
+            'provider'      => PluginBorgbaseProvider::class . '::currentuse'
         ];
 
         $cards['plugin_borgbase_numberoflinkedrepositories'] = [
@@ -76,7 +83,7 @@ class PluginBorgbaseDashboard extends CommonDBTM
             'label'         => __('Number of Computers with a Repo Linked', 'borgbase'),
             'group'         => 'Borgbase',
             'filters'       => [],
-            'provider'      => 'PluginBorgbaseProvider::numberoflinkedrepositories'
+            'provider'      => PluginBorgbaseProvider::class . '::numberoflinkedrepositories'
         ];
 
         return $cards;

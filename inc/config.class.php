@@ -31,6 +31,9 @@
 
 use Glpi\Application\View\TemplateRenderer;
 
+/**
+ * Borgbase Config
+ */
 class PluginBorgbaseConfig extends CommonDBTM
 {
     public static $rightname = 'config';
@@ -171,8 +174,7 @@ class PluginBorgbaseConfig extends CommonDBTM
 				PRIMARY KEY (`id`)
 			)ENGINE=InnoDB DEFAULT CHARSET={$default_charset} 
             COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
-
-            $DB->request($query);
+            $DB->doQueryOrDie($query, $DB->error());
 
             // Default config
             $DB->insert(

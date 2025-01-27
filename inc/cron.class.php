@@ -29,6 +29,9 @@
  * ----------------------------------------------------------------------
  */
 
+/**
+ * Cron
+ */
 class PluginBorgbaseCron extends CommonDBTM
 {
     /**

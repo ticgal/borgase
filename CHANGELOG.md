@@ -1,5 +1,13 @@
 # Borgbase - GLPI Plugin CHANGELOG
 
+## [1.1.5] - 2025-01-27
+### Fixed
+- Fix borgbase api responses (#26621)
+
+## [1.1.4] - 2025-01-24
+### Fixed
+- Dashboard KPIs did not work (#26586)
+
 ## [1.1.3] - 2025-01-10
 ### Fixed
 - Cron for reloading data, avoiding empty or inexistent repos

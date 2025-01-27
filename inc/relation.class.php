@@ -29,6 +29,9 @@
  * ----------------------------------------------------------------------
  */
 
+/**
+ * Borgbase Relation
+ */
 class PluginBorgbaseRelation extends CommonDBRelation
 {
     /**
@@ -70,7 +73,7 @@ class PluginBorgbaseRelation extends CommonDBRelation
             ) ENGINE=InnoDB
                 DEFAULT CHARSET={$default_charset}
                 COLLATE={$default_collation}";
-            $DB->request($query);
+            $DB->doQueryOrDie($query, $DB->error());
         }
     }
 
