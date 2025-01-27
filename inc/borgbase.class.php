@@ -177,8 +177,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     public function getRepoByName($name): array
     {
         $query = '{ repoList(name:\"' . $name . '\") {' . self::getRepoCommonFields() . '}}';
-        $repo = $this->request($query);
-        return $this->formatRawRequest($repo);
+        return $this->getResponseKey($query, 'repoList');
     }
 
     /**
@@ -189,8 +188,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     public function getRepoList(): array
     {
         $query = '{ repoList {' . self::getRepoCommonFields() . '}}';
-        $repoList = $this->request($query);
-        return $this->formatRawRequest($repoList);
+        return $this->getResponseKey($query, 'repoList');
     }
 
     /**
@@ -201,8 +199,20 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     public function getCurrentUsage(): array
     {
         $query = '{ overageList {usedGb,date,plan{includedSize}}}';
+        return $this->getResponseKey($query, 'overageList');
+    }
+
+    /**
+     * getResponseKey
+     *
+     * @param  string $query
+     * @param  string $key
+     * @return mixed|array
+     */
+    private function getResponseKey(string $query, string $key)
+    {
         $req = $this->formatRawRequest($this->request($query));
-        return $req['overageList'] ?? [];
+        return $req[$key] ?? [];
     }
 
     /**
