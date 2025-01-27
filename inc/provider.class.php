@@ -98,14 +98,19 @@ class PluginBorgbaseProvider
             'number' => $percentage,
             'label' => __('Storage usage', 'borgbase'),
         ];
-        $data[] = [
-            'number' => 100 - (int) $percentage,
-            'label' => __('Free storage', 'borgbase'),
-        ];
+
+        // percentage can be greater than 100
+        // borgbase has a plan of 1TB up to flexible 4TB for example
+        if ($percentage < 100) {
+            $data[] = [
+                'number' => $limitUsage - $currentUsage,
+                'label' => __('Free storage', 'borgbase'),
+            ];
+        }
 
         $provide = [
             'data'      => $data,
-            'label'     => 'Borgbase - ' . __('Total Usage Percentage', 'borgbase'),
+            'label'     => 'Borgbase - ' . __('Total Usage Percentage', 'borgbase') . ' (%)',
             'icon'      => PluginBorgbaseBorgbase::getIcon()
         ];
 
