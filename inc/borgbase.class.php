@@ -474,7 +474,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
      * @param  array $repoList
      * @return boolean
      */
-    public function automaticLink($computer, $repoList)
+    public function automaticLink(Computer $computer, array $repoList): bool
     {
         $config = new PluginBorgbaseConfig();
         $config->getFromDB(1);

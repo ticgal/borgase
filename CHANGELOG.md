@@ -1,5 +1,10 @@
 # Borgbase - GLPI Plugin CHANGELOG
 
+## [1.1.6] - 2025-01-29
+### Fixed
+- Avoid losing data if the repository no longer exists in Borgbase
+- Avoid php errors when repository don't exist
+
 ## [1.1.5] - 2025-01-27
 ### Fixed
 - Fix borgbase api responses (#26621)
