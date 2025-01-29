@@ -164,8 +164,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
     public function getRepo($repoId): array
     {
         $query = '{ repo(repoId:\"' . $repoId . '\") {' . self::getRepoCommonFields() . '}}';
-        $repo = $this->request($query);
-        return $this->formatRawRequest($repo);
+        return $this->getResponseKey($query, 'repo');
     }
 
     /**
@@ -366,7 +365,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
         global $DB;
 
         $repo = $this->getRepo($repoId);
-        if (!empty($repo)) {
+        if (!empty($repo) && isset($repo['repoPath'])) {
             $DB->update(
                 $this->getTable(),
                 [
@@ -414,9 +413,7 @@ class PluginBorgbaseBorgbase extends CommonDBTM
         // API returns always {"data":{"x"}} we only want x content
         foreach ($array as $key => $data) {
             if ($key == 'data') {
-                if (isset($data['repo']) && !empty($data['repo'])) {
-                    $format = $data['repo'];
-                } elseif (!empty($data)) {
+                if (!empty($data)) {
                     $format = $data;
                 }
                 break;
@@ -553,15 +550,28 @@ class PluginBorgbaseBorgbase extends CommonDBTM
         } else {
             $row = $res[0];
 
-            //Usage into KB/MG/GB
-            $usage = $borgbase::convertUsage($row['currentUsage']);
-
             // Modifications
-            $row['formatCreatedAt'] = $borgbase->formatDate($row['createdAt']);
-            $row['formatLastModified'] = $borgbase->formatDate($row['lastModified']);
-            $row['formatCompactionInterval'] = $row['compactionInterval'] . ' ' . $row['compactionIntervalUnit'];
-            $row['formatCompactionHour'] = $row['compactionHour'] . ':00 (' . $row['compactionHourTimezone'] . ')';
-            $row['formatCurrentUsage'] = $usage['convert'] . ' ' . $usage['unit'];
+            $row['formatCreatedAt'] = isset($row['createdAt'])
+                ? $borgbase->formatDate($row['createdAt'])
+                : '';
+            $row['formatLastModified'] = isset($row['lastModified'])
+                ? $borgbase->formatDate($row['lastModified'])
+                : '';
+            $row['formatCompactionInterval'] = (isset($row['compactionInterval']) && isset($row['compactionIntervalUnit']))
+                ? $row['compactionInterval'] . ' ' . $row['compactionIntervalUnit']
+                : '';
+            $row['formatCompactionHour'] = (isset($row['compactionHour']) && isset($row['compactionHourTimezone']))
+                ? $row['compactionHour'] . ':00 (' . $row['compactionHourTimezone'] . ')'
+                : '';
+
+            if (isset($row['currentUsage'])) {
+                //Usage into KB/MG/GB
+                $usage = $borgbase::convertUsage($row['currentUsage']);
+                $row['formatCurrentUsage'] = (isset($usage['convert']) && isset($usage['unit']))
+                    ? $usage['convert'] . ' ' . $usage['unit']
+                    : '';
+            }
+
             $row['footerDateCreation'] = __('Created on', 'borgbase') . ' ' . $row['date_creation'];
             $row['footerDateMod'] = __('Last update on', 'borgbase') . ' ' . $row['date_mod'];
 
@@ -570,37 +580,34 @@ class PluginBorgbaseBorgbase extends CommonDBTM
         }
 
         $labels = [
-            'notRegistered' => __('Not registered', 'borgbase'),
-            'selectRepo' => __('Select a repository', 'borgbase'),
-            'name' => __('Name', 'borgbase'),
-            'alertDays' => __('Alert Days', 'borgbase'),
-            'version' => __('Version', 'borgbase'),
-            'region' => __('Region', 'borgbase'),
-            'compactionInterval' => __('Compaction Interval', 'borgbase'),
-            'compactionHour' => __('Compaction Hour', 'borgbase'),
-            'encryption' => __('Encryption', 'borgbase'),
-            'usage' => __('Current Usage', 'borgbase'),
-            'createdAt' =>  __('Creation Date', 'borgbase'),
-            'lastBackup' => __('Last Backup', 'borgbase'),
-            'confirmDeletion' => __('Confirm the final deletion?', 'borgbase'),
-            'unlink' => __('Unlink repository', 'borgbase'),
-            'reload' => __('Reload information', 'borgbase')
+            'notRegistered'         => __('Not registered', 'borgbase'),
+            'selectRepo'            => __('Select a repository', 'borgbase'),
+            'name'                  => __('Name', 'borgbase'),
+            'alertDays'             => __('Alert Days', 'borgbase'),
+            'version'               => __('Version', 'borgbase'),
+            'region'                => __('Region', 'borgbase'),
+            'compactionInterval'    => __('Compaction Interval', 'borgbase'),
+            'compactionHour'        => __('Compaction Hour', 'borgbase'),
+            'encryption'            => __('Encryption', 'borgbase'),
+            'usage'                 => __('Current Usage', 'borgbase'),
+            'createdAt'             => __('Creation Date', 'borgbase'),
+            'lastBackup'            => __('Last Backup', 'borgbase'),
+            'confirmDeletion'       => __('Confirm the final deletion?', 'borgbase'),
+            'unlink'                => __('Unlink repository', 'borgbase'),
+            'reload'                => __('Reload information', 'borgbase')
         ];
 
-        TemplateRenderer::getInstance()->display(
-            $templatePath,
-            [
-                'item' => $borgbase,
-                'elements' => $elements,
-                'data' => $data,
-                'value' => $computerId,
-                'labels' => $labels,
-                'params' => $options,
-                'canCreate' => Session::haveRight(self::$rightname, CREATE),
-                'canUpdate' => Session::haveRight(self::$rightname, UPDATE),
-                'canPurge' => Session::haveRight(self::$rightname, PURGE)
-            ]
-        );
+        TemplateRenderer::getInstance()->display($templatePath, [
+            'item'      => $borgbase,
+            'elements'  => $elements,
+            'data'      => $data,
+            'value'     => $computerId,
+            'labels'    => $labels,
+            'params'    => $options,
+            'canCreate' => Session::haveRight(self::$rightname, CREATE),
+            'canUpdate' => Session::haveRight(self::$rightname, UPDATE),
+            'canPurge'  => Session::haveRight(self::$rightname, PURGE)
+        ]);
 
         return true;
     }
